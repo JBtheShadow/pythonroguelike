@@ -12,3 +12,4 @@ Progress so far:
 * Part 6 - Doing (and taking) some damage
 * Part 7 - Creating the Interface
 * Part 8 - Items and Inventory
+* Part 9 - Ranged Scrolls and Targeting

@@ -28,13 +28,15 @@ class Inventory:
         return results
 
 
-    def use_item(self, item_entity, **kwargs):
+    def use(self, item_entity, **kwargs):
         results = []
 
         item_component = item_entity.item
 
         if item_component.use_function is None:
             results.append({'message': Message('The {0} cannot be used'.format(item_entity.name), libtcod.yellow)})
+        elif item_component.targeting and not (kwargs.get('target_x') or kwargs.get('target_y')):
+            results.append({'targeting': item_entity})
         else:
             kwargs = {**item_component.function_kwargs, **kwargs}
             item_use_results = item_component.use_function(self.owner, **kwargs)
