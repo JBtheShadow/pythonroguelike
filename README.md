@@ -7,3 +7,4 @@ Progress so far:
 * Part 1 - Drawing the ‘@’ symbol and moving it around
 * Part 2 - The generic Entity, the render functions, and the map
 * Part 3 - Generating a dungeon
+* Part 4 - Field of View
