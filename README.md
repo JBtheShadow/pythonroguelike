@@ -11,3 +11,4 @@ Progress so far:
 * Part 5 - Placing Enemies and kicking them (harmlessly)
 * Part 6 - Doing (and taking) some damage
 * Part 7 - Creating the Interface
+* Part 8 - Items and Inventory
