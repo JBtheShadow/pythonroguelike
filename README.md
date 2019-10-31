@@ -9,3 +9,4 @@ Progress so far:
 * Part 3 - Generating a dungeon
 * Part 4 - Field of View
 * Part 5 - Placing Enemies and kicking them (harmlessly)
+* Part 6 - Doing (and taking) some damage
