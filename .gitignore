@@ -58,3 +58,8 @@ target/
 
 # VSCode
 .vscode/
+
+# Saves
+savegame.bak
+savegame.dat
+savegame.dir
