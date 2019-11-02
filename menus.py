@@ -1,5 +1,7 @@
 import tcod as libtcod
 
+from helper_utils import group_options
+
 
 def menu(con, header, options, width, screen_width, screen_height):
     if len(options) > 26: raise ValueError('Cannot have a menu with more than 26 options.')
@@ -34,15 +36,18 @@ def inventory_menu(con, header, player, inventory_width, screen_width, screen_he
     if len(player.inventory.items) == 0:
         options = ['Inventory is empty.']
     else:
+        equip_options = []
         options = []
 
         for item in player.inventory.items:
             if player.equipment.main_hand == item:
-                options.append('{0} (on main hand)'.format(item.name))
+                equip_options.append('{0} (on main hand)'.format(item.name))
             elif player.equipment.off_hand == item:
-                options.append('{0} (on off hand)'.format(item.name))
+                equip_options.append('{0} (on off hand)'.format(item.name))
             else:
                 options.append(item.name)
+
+        options = equip_options + group_options(options)
 
     menu(con, header, options, inventory_width, screen_width, screen_height)
 

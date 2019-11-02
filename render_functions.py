@@ -2,6 +2,8 @@ import tcod as libtcod
 
 from enum import Enum, auto
 
+from helper_utils import group_options
+
 from game_states import GameStates
 from menus import character_screen, inventory_menu, level_up_menu
 
@@ -18,6 +20,7 @@ def get_names_under_mouse(mouse, entities, fov_map):
 
     names = [entity.name for entity in entities
              if entity.x == x and entity.y == y and libtcod.map_is_in_fov(fov_map, entity.x, entity.y)]
+    names = group_options(names)
     names = ', '.join(names)
 
     return names.capitalize()

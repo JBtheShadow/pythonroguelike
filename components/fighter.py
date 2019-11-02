@@ -47,6 +47,8 @@ class Fighter:
         results = []
 
         self.hp -= amount
+        if (self.hp < 0):
+            self.hp = 0
 
         if self.hp <= 0:
             results.append({'dead': self.owner, 'xp': self.xp})
