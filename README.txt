@@ -16,6 +16,7 @@ Progress so far:
 * Part 10 - Saving and loading
 * Part 11 - Delving into the Dungeon
 * Part 12 - Increasing Difficulty
+* Part 13 - Gearing up
 
 # Controls
 Use arrow keys or the numpad to move. If you're daring enough, or would like diagonals but you don't have a numpad, you can also use the following keys:
