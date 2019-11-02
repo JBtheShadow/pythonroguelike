@@ -16,10 +16,11 @@ def main():
 
     libtcod.console_set_custom_font('arial10x10.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
 
-    libtcod.console_init_root(constants['screen_width'], constants['screen_height'], constants['window_title'], False)
+    libtcod.console_init_root(constants['screen_width'], constants['screen_height'], constants['window_title'],
+                              False, libtcod.RENDERER_OPENGL2, vsync=False)
 
-    con = libtcod.console_new(constants['screen_width'], constants['screen_height'])
-    panel = libtcod.console_new(constants['screen_width'], constants['panel_height'])
+    con = libtcod.console.Console(constants['screen_width'], constants['screen_height'])
+    panel = libtcod.console.Console(constants['screen_width'], constants['panel_height'])
 
     player = None
     entities = []
@@ -34,7 +35,7 @@ def main():
 
     key = libtcod.Key()
     mouse = libtcod.Mouse()
-
+    
     while not libtcod.console_is_window_closed():
         libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS | libtcod.EVENT_MOUSE, key, mouse)
 
