@@ -23,7 +23,7 @@ def main():
     panel = libtcod.console.Console(constants['screen_width'], constants['panel_height'])
 
     player = None
-    entities = []
+    entities = None
     game_map = None
     message_log = None
     game_state = None
@@ -85,7 +85,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
     key = libtcod.Key()
     mouse = libtcod.Mouse()
 
-    game_state = GameStates.PLAYERS_TURN
+    ready = []
     previous_game_state = game_state
 
     targeting_item = None
@@ -126,6 +126,14 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
         right_click = mouse_action.get('right_click')
 
         player_turn_results = []
+        
+        if game_state in (GameStates.PLAYERS_TURN, GameStates.ENEMY_TURN):
+            if not ready:
+                ready = entities.get_ready()
+            if (player in ready):
+                game_state = GameStates.PLAYERS_TURN
+            else:
+                game_state = GameStates.ENEMY_TURN
 
         if move and game_state == GameStates.PLAYERS_TURN:
             dx, dy = move
@@ -143,10 +151,10 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 
                     fov_recompute = True
 
-                game_state = GameStates.ENEMY_TURN
+                ready = [entity for entity in ready if not entity is player]
 
         elif wait:
-            game_state = GameStates.ENEMY_TURN
+            ready = [entity for entity in ready if not entity is player]
 
         elif pickup and game_state == GameStates.PLAYERS_TURN:
             for entity in entities:
@@ -250,10 +258,10 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
             if item_added:
                 entities.remove(item_added)
 
-                game_state = GameStates.ENEMY_TURN
+                ready = [entity for entity in ready if not entity is player]
 
             if item_consumed:
-                game_state = GameStates.ENEMY_TURN
+                ready = [entity for entity in ready if not entity is player]
 
             if item_dropped:
                 if item_dropped.item.function_kwargs.get("can_stack"):
@@ -265,7 +273,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
                 else:
                     entities.append(item_dropped)
 
-                game_state = GameStates.ENEMY_TURN
+                ready = [entity for entity in ready if not entity is player]
 
             if equip:
                 equip_results = player.equipment.toggle_equip(equip)
@@ -280,7 +288,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
                     if dequipped:
                         message_log.add_message(Message('You dequipped the {0}'.format(dequipped.name)))
 
-                game_state = GameStates.ENEMY_TURN
+                ready = [entity for entity in ready if not entity is player]
 
             if targeting:
                 previous_game_state = GameStates.PLAYERS_TURN
@@ -306,8 +314,11 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
                     previous_game_state = game_state
                     game_state = GameStates.LEVEL_UP
 
+        if game_state == GameStates.PLAYERS_TURN and not player in ready:
+            game_state = GameStates.ENEMY_TURN
+
         if game_state == GameStates.ENEMY_TURN:
-            for entity in entities:
+            for entity in [entity for entity in ready]:
                 if entity.ai:
                     enemy_turn_results = entity.ai.take_turn(player, fov_map, game_map, entities)
 
@@ -332,7 +343,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
                     if game_state == GameStates.PLAYER_DEAD:
                         break
             else:
-                game_state = GameStates.PLAYERS_TURN
+                ready = []
 
 
 if __name__ == '__main__':

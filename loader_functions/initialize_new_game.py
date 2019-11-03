@@ -7,6 +7,7 @@ from components.inventory import Inventory
 from components.level import Level
 
 from entity import Entity
+from entity_list import EntityList
 
 from equipment_slots import EquipmentSlots
 
@@ -81,14 +82,15 @@ def get_constants():
 
 
 def get_game_variables(constants):
-    fighter_component = Fighter(hp=100, defense=1, power=2)
+    fighter_component = Fighter(hp=100, defense=1, power=2, speed=4)
     inventory_component = Inventory(26)
     level_component = Level()
     equipment_component = Equipment()
     player = Entity(0, 0, '@', libtcod.white, 'Player', blocks=True, render_order=RenderOrder.ACTOR,
                     fighter=fighter_component, inventory=inventory_component, level=level_component,
                     equipment=equipment_component)
-    entities = [player]
+    entities = EntityList()
+    entities.append(player)
 
     equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=2)
     dagger = Entity(0, 0, '-', libtcod.sky, 'Dagger', equippable=equippable_component)

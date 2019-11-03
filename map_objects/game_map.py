@@ -9,6 +9,7 @@ from components.item import Item
 from components.stairs import Stairs
 
 from entity import Entity
+from entity_list import EntityList
 from game_messages import Message
 from item_functions import cast_confuse, cast_fireball, cast_lightning, heal
 from map_objects.rectangle import Rect
@@ -157,13 +158,13 @@ class GameMap:
                 monster_choice = random_choice_from_dict(monster_chances)
 
                 if monster_choice == 'orc':
-                    fighter_component = Fighter(hp=20, defense=0, power=4, xp=35)
+                    fighter_component = Fighter(hp=20, defense=0, power=4, speed=3, xp=35)
                     ai_component = BasicMonster()
 
                     monster = Entity(x, y, 'o', libtcod.desaturated_green, 'Orc', blocks=True,
                                      render_order=RenderOrder.ACTOR, fighter=fighter_component, ai=ai_component)
                 elif monster_choice == 'troll':
-                    fighter_component = Fighter(hp=30, defense=2, power=8, xp=100)
+                    fighter_component = Fighter(hp=30, defense=2, power=8, speed=2, xp=100)
                     ai_component = BasicMonster()
 
                     monster = Entity(x, y, 'T', libtcod.darker_green, 'Troll', blocks=True,
@@ -225,7 +226,8 @@ class GameMap:
 
     def next_floor(self, player, message_log, constants):
         self.dungeon_level += 1
-        entities = [player]
+        entities = EntityList()
+        entities.append(player)
 
         self.tiles = self.initialize_tiles()
         self.make_map(constants['max_rooms'], constants['room_min_size'], constants['room_max_size'],

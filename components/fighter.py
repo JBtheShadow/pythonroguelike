@@ -4,12 +4,13 @@ from game_messages import Message
 
 
 class Fighter:
-    def __init__(self, hp, defense, power, xp=0):
+    def __init__(self, hp, defense, power, speed, xp=0):
         self.owner = None
         self.base_max_hp = hp
         self.hp = hp
         self.base_defense = defense
         self.base_power = power
+        self.base_speed = speed
         self.xp = xp
 
 
@@ -41,6 +42,16 @@ class Fighter:
             bonus = 0
 
         return self.base_defense + bonus
+
+
+    @property
+    def speed(self):
+        if self.owner and self.owner.equipment:
+            bonus = self.owner.equipment.speed_bonus
+        else:
+            bonus = 0
+
+        return self.base_speed + bonus
 
 
     def take_damage(self, amount):
