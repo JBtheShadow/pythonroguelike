@@ -168,7 +168,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 
         if inventory_index is not None and previous_game_state != GameStates.PLAYER_DEAD and inventory_index < len(
                 player.inventory.items):
-            item = player.inventory.items[inventory_index]
+            item = player.inventory.items[player.inventory.get_index_from_options(inventory_index)]
 
             if game_state == GameStates.SHOW_INVENTORY:
                 player_turn_results.extend(player.inventory.use(item, entities=entities, fov_map=fov_map))

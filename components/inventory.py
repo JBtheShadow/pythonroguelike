@@ -1,6 +1,7 @@
 import tcod as libtcod
 
 from game_messages import Message
+from helper_utils import group_options, group_indexes
 
 
 class Inventory:
@@ -74,3 +75,22 @@ class Inventory:
         results.append({'item_dropped': item, 'message': Message('You dropped the {0}'.format(item.name), libtcod.yellow)})
 
         return results
+
+
+    def get_options(self):
+        options = []
+        equip_options = []
+
+        for item in self.items:
+            if self.owner and self.owner.equipment and self.owner.equipment.main_hand == item:
+                equip_options.append('{0} (on main hand)'.format(item.name))
+            elif self.owner and self.owner.equipment and self.owner.equipment.off_hand == item:
+                equip_options.append('{0} (on off hand)'.format(item.name))
+            else:
+                options.append(item.name)
+
+        return equip_options + group_options(options)
+
+
+    def get_index_from_options(self, option_index):
+        return group_indexes(self.get_options())[option_index]
