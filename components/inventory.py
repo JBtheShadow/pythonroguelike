@@ -13,18 +13,39 @@ class Inventory:
     def add_item(self, item):
         results = []
 
-        if len(self.items) >= self.capacity:
-            results.append({
-                'item_added': None,
-                'message': Message('You cannot carry any more, your inventory is full', libtcod.yellow)
-            })
-        else:
-            results.append({
-                'item_added': item,
-                'message': Message('You pick up the {0}!'.format(item.name), libtcod.blue)
-            })
+        if (item.item.function_kwargs.get("can_stack")):
+            candidates = [x for x in self.items if x.item.function_kwargs.get("can_stack") and x.name == item.name]
+            
+            if len(candidates) <= 0 and len(self.items) >= self.capacity:
+                results.append({
+                    'item_added': None,
+                    'message': Message('You cannot carry any more, your inventory is full', libtcod.yellow)
+                })
+            else:
+                results.append({
+                    'item_added': item,
+                    'message': Message('You pick up {0} {1}(s)!'.format(item.item.function_kwargs["amount"], item.name), libtcod.blue)
+                })
 
-            self.items.append(item)
+                if len(candidates) <= 0:
+                    self.items.append(item)
+                else:
+                    existing = candidates[0]
+                    existing.item.function_kwargs["amount"] += item.item.function_kwargs["amount"]
+
+        else:
+            if len(self.items) >= self.capacity:
+                results.append({
+                    'item_added': None,
+                    'message': Message('You cannot carry any more, your inventory is full', libtcod.yellow)
+                })
+            else:
+                results.append({
+                    'item_added': item,
+                    'message': Message('You pick up the {0}!'.format(item.name), libtcod.blue)
+                })
+
+                self.items.append(item)
 
         return results
 
@@ -86,6 +107,8 @@ class Inventory:
                 equip_options.append('{0} (on main hand)'.format(item.name))
             elif self.owner and self.owner.equipment and self.owner.equipment.off_hand == item:
                 equip_options.append('{0} (on off hand)'.format(item.name))
+            elif item.item.function_kwargs.get("can_stack"):
+                options.append("{0} {1}(s)".format(item.item.function_kwargs["amount"], item.name))
             else:
                 options.append(item.name)
 

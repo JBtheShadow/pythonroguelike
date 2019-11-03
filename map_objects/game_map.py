@@ -13,7 +13,7 @@ from game_messages import Message
 from item_functions import cast_confuse, cast_fireball, cast_lightning, heal
 from map_objects.rectangle import Rect
 from map_objects.tile import Tile
-from random_utils import from_dungeon_level, random_choice_from_dict
+from random_utils import from_dungeon_level, random_choice_from_dict, random_range
 from render_functions import RenderOrder
 
 class GameMap:
@@ -139,6 +139,7 @@ class GameMap:
         }
 
         item_chances = {
+            'money': 20,
             'healing_potion': 35,
             'sword': from_dungeon_level([[5, 4]], self.dungeon_level),
             'shield': from_dungeon_level([[15, 8]], self.dungeon_level),
@@ -180,6 +181,10 @@ class GameMap:
                 if item_choice == 'healing_potion':
                     item_component = Item(use_function=heal, amount=40)
                     item = Entity(x, y, '!', libtcod.violet, 'Healing Potion', render_order=RenderOrder.ITEM, item=item_component)
+
+                elif item_choice == 'money':
+                    item_component = Item(can_stack=True, amount=random_range(self.dungeon_level, self.dungeon_level * 30))
+                    item = Entity(x, y, '$', libtcod.yellow, 'Gold Coin', render_order=RenderOrder.ITEM, item=item_component)
 
                 elif item_choice == 'sword':
                     equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=3)

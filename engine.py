@@ -256,7 +256,14 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
                 game_state = GameStates.ENEMY_TURN
 
             if item_dropped:
-                entities.append(item_dropped)
+                if item_dropped.item.function_kwargs.get("can_stack"):
+                    candidates = [ent.item for ent in entities if ent.item and ent.item.function_kwargs.get("can_stack") and ent.name == item_dropped.name]
+                    if len(candidates) > 0:
+                        candidates[0].item.function_kwargs["amount"] += item_dropped.item.function_kwargs["amount"]
+                    else:
+                        entities.append(item_dropped)
+                else:
+                    entities.append(item_dropped)
 
                 game_state = GameStates.ENEMY_TURN
 

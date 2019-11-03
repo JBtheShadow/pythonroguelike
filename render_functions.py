@@ -18,7 +18,8 @@ class RenderOrder(Enum):
 def get_names_under_mouse(mouse, entities, fov_map):
     (x, y) = (mouse.cx, mouse.cy)
 
-    names = [entity.name for entity in entities
+    names = ["{0} {1}(s)".format(entity.item.function_kwargs["amount"], entity.name) if entity.item and entity.item.function_kwargs.get("can_stack") else entity.name
+             for entity in entities
              if entity.x == x and entity.y == y and libtcod.map_is_in_fov(fov_map, entity.x, entity.y)]
     names = group_options(names)
     names = ', '.join(names)
